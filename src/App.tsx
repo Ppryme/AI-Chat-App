@@ -1,0 +1,65 @@
+import Header from './components/ui/Header';
+import ChatMessage from './components/chat/ChatMessage';
+import ChatInput from './components/chat/ChatInput';
+import ScrollButton from './components/chat/ScrollButton';
+import Sidebar from './components/chat/Sidebar';
+import { useChatStore } from './stores/chatStore';
+import { useChat } from './hooks/useChat';
+
+export default function App() {
+  const messages = useChatStore((state) => state.messages);
+  const loading = useChatStore((state) => state.loading);
+  const tokenUsage = useChatStore((state) => state.tokenUsage);
+
+  const {
+    chatContainerRef,
+    messagesEndRef,
+    handleScroll,
+    scrollToBottom,
+    handleSubmit,
+    stopGeneration,
+    loadConversation,
+    startNewChat,
+  } = useChat();
+
+  return (
+    <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
+      {/* Sidebar displaying only conversation history */}
+      <Sidebar onSelectChat={loadConversation} onNewChat={startNewChat} />
+
+      {/* Main Chat Area */}
+      <main className="flex-1 flex flex-col h-full min-w-0 bg-slate-900 border-l border-slate-800/80">
+        {/* --- TOP HEADER --- */}
+        <Header onNewChat={startNewChat} tokenUsage={tokenUsage} />
+
+        {/* --- CHAT MESSAGES CONTAINER --- */}
+        <div
+          ref={chatContainerRef}
+          onScroll={handleScroll}
+          className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scroll-smooth relative"
+        >
+          {messages.map((msg, index) => (
+            <ChatMessage key={index} message={msg} />
+          ))}
+
+          {loading && (
+            <div className="flex justify-start">
+              <div className="text-slate-400 text-sm py-1 animate-pulse flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></span>
+                Thinking...
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* --- INPUT SECTION --- */}
+        <div className="relative">
+          <ScrollButton onClick={() => scrollToBottom('smooth')} />
+          <ChatInput onSubmit={loading ? stopGeneration : handleSubmit} />
+        </div>
+      </main>
+    </div>
+  );
+}
