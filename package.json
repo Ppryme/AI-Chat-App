@@ -15,6 +15,7 @@
     "eventsource-parser": "^4.1.1",
     "express": "^4.22.3",
     "express-rate-limit": "^8.7.0",
+    "framer-motion": "^14.0.0",
     "groq-sdk": "^1.6.0",
     "helmet": "^8.3.0",
     "lucide-react": "^1.51.0",

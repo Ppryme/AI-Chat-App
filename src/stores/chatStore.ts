@@ -11,6 +11,7 @@ interface ChatState {
   tokenUsage: TokenUsage | null;
   input: string;
   loading: boolean;
+  messagesLoading: boolean;
   showScrollButton: boolean;
   currentChatId: string | null;
   chats: Chat[];
@@ -21,6 +22,7 @@ interface ChatState {
   setTokenUsage: (usage: TokenUsage | null) => void;
   setInput: (input: string) => void;
   setLoading: (loading: boolean) => void;
+  setMessagesLoading: (messagesLoading: boolean) => void;
   setShowScrollButton: (show: boolean) => void;
   setCurrentChatId: (id: string | null) => void;
   setChats: (chats: Chat[] | ((prev: Chat[]) => Chat[])) => void;
@@ -36,6 +38,7 @@ export const useChatStore = create<ChatState>((set) => ({
   tokenUsage: null,
   input: '',
   loading: false,
+  messagesLoading: false,
   showScrollButton: false,
   currentChatId: null,
   chats: [],
@@ -49,6 +52,7 @@ export const useChatStore = create<ChatState>((set) => ({
   setTokenUsage: (tokenUsage) => set({ tokenUsage }),
   setInput: (input) => set({ input }),
   setLoading: (loading) => set({ loading }),
+  setMessagesLoading: (messagesLoading) => set({ messagesLoading }),
   setShowScrollButton: (showScrollButton) => set({ showScrollButton }),
   setCurrentChatId: (currentChatId) => set({ currentChatId }),
   setChats: (chats) =>
@@ -73,6 +77,7 @@ export const useChatStore = create<ChatState>((set) => ({
         currentChatId: isCurrentActive ? null : state.currentChatId,
         messages: isCurrentActive ? [DEFAULT_SYSTEM_MESSAGE] : state.messages,
         tokenUsage: isCurrentActive ? null : state.tokenUsage,
+        messagesLoading: false,
       };
     }),
   resetConversation: () =>
@@ -81,5 +86,6 @@ export const useChatStore = create<ChatState>((set) => ({
       messages: [DEFAULT_SYSTEM_MESSAGE],
       input: '',
       tokenUsage: null,
+      messagesLoading: false,
     }),
 }));

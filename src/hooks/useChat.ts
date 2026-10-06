@@ -22,6 +22,7 @@ export function useChat() {
   const setChatsLoading = useChatStore((state) => state.setChatsLoading);
   const resetConversation = useChatStore((state) => state.resetConversation);
   const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
+  const setMessagesLoading = useChatStore((state) => state.setMessagesLoading);
 
   const bufferRef = useRef('');
   const displayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -33,7 +34,12 @@ export function useChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
-    messagesEndRef.current?.scrollIntoView({ behavior });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior,
+      });
+    }
   }, []);
 
   const handleScroll = () => {
@@ -147,7 +153,7 @@ export function useChat() {
       setSidebarOpen(false);
 
       try {
-        setLoading(true);
+        setMessagesLoading(true);
         const fetchedMessages = await fetchChatMessages(chatId);
         setMessages([
           { role: 'system', content: DEFAULT_SYSTEM_PROMPT },
@@ -163,10 +169,10 @@ export function useChat() {
           },
         ]);
       } finally {
-        setLoading(false);
+        setMessagesLoading(false);
       }
     },
-    [stopGeneration, setInput, setTokenUsage, setCurrentChatId, setSidebarOpen, setLoading, setMessages]
+    [stopGeneration, setInput, setTokenUsage, setCurrentChatId, setSidebarOpen, setMessagesLoading, setMessages]
   );
 
   // Start fresh chat
