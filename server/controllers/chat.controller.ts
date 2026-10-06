@@ -55,7 +55,7 @@ export const streamChat = async (req: Request, res: Response) => {
 
     const stream = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
-      messages,
+      messages: messages as any,
       temperature: 0.5,
       max_tokens: 2048,
       stream: true,
@@ -111,7 +111,7 @@ export const structuredChat = async (req: Request, res: Response) => {
 
     const response = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
-      messages,
+      messages: messages as any,
       temperature: 0.5,
       max_tokens: 2048,
       response_format: {
