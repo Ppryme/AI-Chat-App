@@ -1,8 +1,9 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "type": "module",
+  "main": "server.ts",
   "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.ts",
     "dev": "node --disable-warning=ExperimentalWarning --watch server.ts"
   },
   "dependencies": {

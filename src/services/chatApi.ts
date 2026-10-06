@@ -1,6 +1,6 @@
 import type { Chat, Message } from '../types/chat';
 
-const API_BASE = 'http://localhost:5000/api/chats';
+const API_BASE = '/api/chats';
 
 export async function fetchChats(): Promise<Chat[]> {
   const res = await fetch(API_BASE);

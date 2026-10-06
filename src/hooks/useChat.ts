@@ -201,7 +201,7 @@ export function useChat() {
     abortControllerRef.current = controller;
 
     try {
-      const response = await fetch('http://localhost:5000/api/chat/stream', {
+      const response = await fetch('/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -318,7 +318,7 @@ export function useChat() {
     if (!input.trim()) return;
 
     try {
-      const response = await fetch('http://localhost:5000/api/chat/structured', {
+      const response = await fetch('/api/chat/structured', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
