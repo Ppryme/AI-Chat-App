@@ -14,10 +14,10 @@ export default function Header({ onNewChat, tokenUsage }: HeaderProps) {
 
   const activeChat = chats.find((c) => c.id === currentChatId);
   const title = activeChat ? activeChat.title : 'New Chat';
-  const subtitle = activeChat ? 'Conversation history loaded from PostgreSQL' : 'How can I help you today?';
+  const subtitle = activeChat ? 'How can I help you today?' : '';
 
   return (
-    <div className="flex justify-between items-center px-4 sm:px-6 py-3.5 border-b border-slate-800/60 bg-slate-900/50 backdrop-blur fixed">
+    <div className="flex justify-between items-center px-4 sm:px-6 py-3.5 border-b border-slate-800/60 bg-slate-900/50 backdrop-blur ">
       <div className="flex items-center gap-3 min-w-0">
         <button
           onClick={() => setSidebarOpen((prev) => !prev)}
