@@ -17,7 +17,7 @@ export default function Header({ onNewChat, tokenUsage }: HeaderProps) {
   const subtitle = activeChat ? 'How can I help you today?' : '';
 
   return (
-    <div className="flex justify-between items-center px-4 sm:px-6 py-3.5 border-b border-slate-800/60 bg-slate-900/50 backdrop-blur ">
+    <header className="flex justify-between items-center px-4 sm:px-6 py-3.5 border-b border-slate-800/60 bg-slate-900/50 backdrop-blur top-0 ">
       <div className="flex items-center gap-3 min-w-0">
         <button
           onClick={() => setSidebarOpen((prev) => !prev)}
@@ -50,6 +50,6 @@ export default function Header({ onNewChat, tokenUsage }: HeaderProps) {
           <RotateCcw className="w-4 h-4" />
         </button>
       </div>
-    </div>
+    </header>
   );
 }
