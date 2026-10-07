@@ -231,7 +231,7 @@ export function TableDataCell({ children, ...props }: React.ComponentPropsWithou
     <td
       className={`px-4 py-3 align-top text-sm text-slate-300 leading-relaxed min-w-[120px] max-w-[480px] break-words ${
         isOverflowing
-          ? 'first:sticky first:left-0 first:z-10 first:bg-slate-950 first:group-hover:bg-slate-900/80 first:shadow-[2px_0_6px_-1px_rgba(0,0,0,0.5)] first:border-r first:border-slate-800/80'
+          ? ' first:left-0 first:z-10 first:bg-slate-950 first:group-hover:bg-slate-900/80 first:shadow-[2px_0_6px_-1px_rgba(0,0,0,0.5)] first:border-r first:border-slate-800/80'
           : ''
       }`}
       {...props}
