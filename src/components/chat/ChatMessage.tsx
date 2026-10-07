@@ -10,7 +10,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+      className={`flex overflow-hidden ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
     >
       <div
         className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 font-semibold text-sm leading-relaxed wrap-anywhere min-w-0 ${
