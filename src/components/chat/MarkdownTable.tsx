@@ -210,10 +210,10 @@ export function TableRow({ children, ...props }: React.ComponentPropsWithoutRef<
 export function TableHeaderCell({ children, ...props }: React.ComponentPropsWithoutRef<'th'>) {
   return (
     <th
-      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 border-b border-slate-700/80 bg-slate-900/95 min-w-[120px] max-w-[280px] sm:max-w-[450px] break-words"
+      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 border-b border-slate-700/80 bg-slate-900/95 min-w-[120px] max-w-[280px] sm:max-w-[450px] wrap-break-word"
       {...props}
     >
-      <div className="max-w-[280px] sm:max-w-[450px] break-words">
+      <div className="max-w-[280px] sm:max-w-[450px] wrap-break-word">
         {children}
       </div>
     </th>
@@ -223,10 +223,10 @@ export function TableHeaderCell({ children, ...props }: React.ComponentPropsWith
 export function TableDataCell({ children, ...props }: React.ComponentPropsWithoutRef<'td'>) {
   return (
     <td
-      className="px-4 py-3 align-top text-sm text-slate-300 leading-relaxed min-w-[130px] max-w-[280px] sm:max-w-[450px] break-words"
+      className="px-4 py-3 align-top text-sm text-slate-300 leading-relaxed min-w-[130px] max-w-[280px] sm:max-w-[450px] wrap-break-word"
       {...props}
     >
-      <div className="max-w-[280px] sm:max-w-[450px] break-words">
+      <div className="max-w-[280px] sm:max-w-[450px] wrap-break-word">
         {children}
       </div>
     </td>
