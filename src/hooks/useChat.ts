@@ -146,6 +146,11 @@ export function useChat() {
   // Load a selected conversation's messages from PostgreSQL
   const loadConversation = useCallback(
     async (chatId: string) => {
+      if (chatId === currentChatId) {
+        setSidebarOpen(false);
+        return;
+      }
+
       stopGeneration();
       setInput('');
       setTokenUsage(null);
@@ -172,7 +177,7 @@ export function useChat() {
         setMessagesLoading(false);
       }
     },
-    [stopGeneration, setInput, setTokenUsage, setCurrentChatId, setSidebarOpen, setMessagesLoading, setMessages]
+    [currentChatId, stopGeneration, setInput, setTokenUsage, setCurrentChatId, setSidebarOpen, setMessagesLoading, setMessages]
   );
 
   // Start fresh chat

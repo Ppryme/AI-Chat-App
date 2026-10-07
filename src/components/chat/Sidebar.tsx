@@ -113,7 +113,13 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
             return (
               <div
                 key={chat.id}
-                onClick={() => onSelectChat(chat.id)}
+                onClick={() => {
+                  if (chat.id === currentChatId) {
+                    setSidebarOpen(false);
+                    return;
+                  }
+                  onSelectChat(chat.id);
+                }}
                 className={`group flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
                   isActive
                     ? 'bg-slate-800 text-white border border-slate-700/60 shadow-xs'
@@ -152,17 +158,17 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
                       <span className="truncate">{chat.title}</span>
                     </div>
 
-                    <div className="hidden hover:none lg:group-hover:flex items-center gap-1 shrink-0">
+                    <div className="flex items-center gap-1 shrink-0 lg:opacity-0 lg:group-hover:opacity-100 transition-none lg:transition-opacity">
                       <button
                         onClick={(e) => handleStartRename(e, chat.id, chat.title)}
-                        className="p-1 text-slate-400 hover:text-white hover:bg-slate-700/60 rounded"
+                        className="p-1 text-slate-400 hover:text-white lg:hover:bg-slate-700/60 rounded"
                         title="Rename"
                       >
                         <Edit2 className="w-3 h-3" />
                       </button>
                       <button
                         onClick={(e) => handleDelete(e, chat.id)}
-                        className="p-1 text-slate-400 hover:text-red-400 hover:bg-slate-700/60 rounded"
+                        className="p-1 text-slate-400 hover:text-red-400 lg:hover:bg-slate-700/60 rounded"
                         title="Delete"
                       >
                         <Trash2 className="w-3 h-3" />
