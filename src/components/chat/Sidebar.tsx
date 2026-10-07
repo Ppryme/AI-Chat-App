@@ -152,7 +152,7 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
                       <span className="truncate">{chat.title}</span>
                     </div>
 
-                    <div className="hidden group-hover:flex items-center gap-1 shrink-0">
+                    <div className="hidden hover:none lg:group-hover:flex items-center gap-1 shrink-0">
                       <button
                         onClick={(e) => handleStartRename(e, chat.id, chat.title)}
                         className="p-1 text-slate-400 hover:text-white hover:bg-slate-700/60 rounded"
