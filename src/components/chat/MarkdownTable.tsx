@@ -208,35 +208,27 @@ export function TableRow({ children, ...props }: React.ComponentPropsWithoutRef<
 }
 
 export function TableHeaderCell({ children, ...props }: React.ComponentPropsWithoutRef<'th'>) {
-  const { isOverflowing } = useTableContext();
-
   return (
     <th
-      className={`px-4 py-3 text-left text-xs font-semibold text-slate-200 border-b border-slate-700/80 bg-slate-900/95 whitespace-nowrap min-w-[100px] ${
-        isOverflowing
-          ? ' first:left-0 first:z-20 first:bg-slate-900 first:shadow-[2px_0_6px_-1px_rgba(0,0,0,0.5)] first:border-r first:border-slate-800'
-          : ''
-      }`}
+      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 border-b border-slate-700/80 bg-slate-900/95 min-w-[120px] max-w-[280px] sm:max-w-[450px] break-words"
       {...props}
     >
-      {children}
+      <div className="max-w-[280px] sm:max-w-[450px] break-words">
+        {children}
+      </div>
     </th>
   );
 }
 
 export function TableDataCell({ children, ...props }: React.ComponentPropsWithoutRef<'td'>) {
-  const { isOverflowing } = useTableContext();
-
   return (
     <td
-      className={`px-4 py-3 align-top text-sm text-slate-300 leading-relaxed min-w-[120px] max-w-[480px] break-words ${
-        isOverflowing
-          ? ' first:left-0 first:z-10 first:bg-slate-950 first:group-hover:bg-slate-900/80 first:shadow-[2px_0_6px_-1px_rgba(0,0,0,0.5)] first:border-r first:border-slate-800/80'
-          : ''
-      }`}
+      className="px-4 py-3 align-top text-sm text-slate-300 leading-relaxed min-w-[130px] max-w-[280px] sm:max-w-[450px] break-words"
       {...props}
     >
-      {children}
+      <div className="max-w-[280px] sm:max-w-[450px] break-words">
+        {children}
+      </div>
     </td>
   );
 }
