@@ -214,7 +214,7 @@ export function TableHeaderCell({ children, ...props }: React.ComponentPropsWith
     <th
       className={`px-4 py-3 text-left text-xs font-semibold text-slate-200 border-b border-slate-700/80 bg-slate-900/95 whitespace-nowrap min-w-[100px] ${
         isOverflowing
-          ? 'first:sticky first:left-0 first:z-20 first:bg-slate-900 first:shadow-[2px_0_6px_-1px_rgba(0,0,0,0.5)] first:border-r first:border-slate-800'
+          ? ' first:left-0 first:z-20 first:bg-slate-900 first:shadow-[2px_0_6px_-1px_rgba(0,0,0,0.5)] first:border-r first:border-slate-800'
           : ''
       }`}
       {...props}
