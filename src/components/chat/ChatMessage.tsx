@@ -1,6 +1,14 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Message } from '../../types/chat';
+import {
+  MarkdownTable,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeaderCell,
+  TableDataCell,
+} from './MarkdownTable';
 
 interface ChatMessageProps {
   message: Message;
@@ -122,43 +130,12 @@ export default function ChatMessage({ message }: ChatMessageProps) {
               ),
 
               /* TABLE */
-              table: ({ children }) => (
-                <div className="my-4 w-full max-w-full overflow-x-auto rounded-xl border border-slate-800">
-                  <table className="w-full min-w-[600px] border-collapse text-left text-sm">
-                    {children}
-                  </table>
-                </div>
-              ),
-
-              thead: ({ children }) => (
-                <thead className="border-b border-slate-700 bg-slate-900/60">
-                  {children}
-                </thead>
-              ),
-
-              tbody: ({ children }) => (
-                <tbody className="divide-y divide-slate-800">
-                  {children}
-                </tbody>
-              ),
-
-              tr: ({ children }) => (
-                <tr className="transition-colors hover:bg-slate-800/30">
-                  {children}
-                </tr>
-              ),
-
-              th: ({ children }) => (
-                <th className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold text-slate-300">
-                  {children}
-                </th>
-              ),
-
-              td: ({ children }) => (
-                <td className="px-4 py-3 align-top text-sm text-slate-300">
-                  {children}
-                </td>
-              ),
+              table: MarkdownTable,
+              thead: TableHead,
+              tbody: TableBody,
+              tr: TableRow,
+              th: TableHeaderCell,
+              td: TableDataCell,
             }}
           >
             {message.content}
