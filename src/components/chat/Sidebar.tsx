@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useChatStore } from '../../stores/chatStore';
 import { renameChat, deleteChat } from '../../services/chatApi';
 import { Plus, MessageSquare, Trash2, Edit2, Check, X } from 'lucide-react';
+import DeleteModal from '../ui/DeleteModal';
 
 interface SidebarProps {
   onSelectChat: (chatId: string) => void;
@@ -19,6 +20,9 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [chatToDelete, setChatToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleStartRename = (e: React.MouseEvent, id: string, title: string) => {
     e.stopPropagation();
@@ -42,14 +46,24 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
     }
   };
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
+  const handleOpenDeleteModal = (e: React.MouseEvent, id: string, title: string) => {
     e.stopPropagation();
-    if (!confirm('Are you sure you want to delete this conversation?')) return;
+    setChatToDelete({ id, title });
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!chatToDelete) return;
+    setIsDeleting(true);
     try {
-      removeChatFromStore(id);
-      await deleteChat(id);
+      removeChatFromStore(chatToDelete.id);
+      await deleteChat(chatToDelete.id);
+      setDeleteModalOpen(false);
+      setChatToDelete(null);
     } catch (error) {
       console.error('Failed to delete conversation:', error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -167,7 +181,7 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
                         <Edit2 className="w-3 h-3" />
                       </button>
                       <button
-                        onClick={(e) => handleDelete(e, chat.id)}
+                        onClick={(e) => handleOpenDeleteModal(e, chat.id, chat.title)}
                         className="p-1 text-slate-400 hover:text-red-400 lg:hover:bg-slate-700/60 rounded"
                         title="Delete"
                       >
@@ -181,6 +195,20 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
           })}
         </div>
       </aside>
+
+      {/* Custom Confirmation Modal for deletion */}
+      <DeleteModal
+        isOpen={deleteModalOpen}
+        chatTitle={chatToDelete?.title}
+        isDeleting={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onClose={() => {
+          if (!isDeleting) {
+            setDeleteModalOpen(false);
+            setChatToDelete(null);
+          }
+        }}
+      />
     </>
   );
 }
