@@ -9,4 +9,6 @@ body,
   margin: 0;
   padding: 0;
   overscroll-behavior: none;
+  background-attachment: fixed;
+  background-color: #0f172b;
 }

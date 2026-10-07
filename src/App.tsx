@@ -26,7 +26,7 @@ export default function App() {
   } = useChat();
 
   return (
-    <div className="flex h-[100dvh] w-full bg-slate-950 text-slate-100 overflow-hidden font-sans fixed inset-0">
+    <div className="flex h-dvh w-full bg-slate-950 text-slate-100 overflow-hidden font-sans fixed inset-0">
       {/* Sidebar displaying only conversation history */}
       <Sidebar onSelectChat={loadConversation} onNewChat={startNewChat} />
 
