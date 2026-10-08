@@ -3,7 +3,7 @@ import type { Chat, Message, TokenUsage } from '../types/chat';
 
 const DEFAULT_SYSTEM_MESSAGE: Message = {
   role: 'system',
-  content: 'You are an expert in data analysis and AI assistant.',
+  content: 'You are a helpful assistant.',
 };
 
 interface ChatState {

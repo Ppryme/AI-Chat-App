@@ -3,21 +3,9 @@ import React, {
   useRef,
   useEffect,
   useCallback,
-  createContext,
-  useContext,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { Maximize2, X, MoveHorizontal } from 'lucide-react';
-
-interface TableContextValue {
-  isOverflowing: boolean;
-}
-
-const TableContext = createContext<TableContextValue>({ isOverflowing: false });
-
-export function useTableContext() {
-  return useContext(TableContext);
-}
 
 interface MarkdownTableProps extends React.ComponentPropsWithoutRef<'table'> {
   children?: React.ReactNode;
@@ -76,7 +64,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
   }, [isExpanded]);
 
   return (
-    <TableContext.Provider value={{ isOverflowing }}>
+    <>
       <div className="my-4 w-full max-w-full rounded-xl border border-slate-800 bg-slate-950/40 overflow-hidden shadow-xs">
         {/* Top toolbar when table is overflowing or has wide content */}
         {isOverflowing && (
@@ -109,7 +97,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
           {/* Subtle Right Gradient Shadow when more columns exist to the right */}
           {canScrollRight && (
             <div
-              className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-slate-950/90 via-slate-950/40 to-transparent transition-opacity duration-200 z-15"
+              className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-linear-to-l from-slate-950/90 via-slate-950/40 to-transparent transition-opacity duration-200 z-15"
               aria-hidden="true"
             />
           )}
@@ -176,7 +164,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
           </div>,
           document.body
         )}
-    </TableContext.Provider>
+    </>
   );
 }
 
