@@ -5,6 +5,8 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import { groq } from '../services/groq.service.ts';
 import * as chatDb from '../services/chatDb.service.ts';
 
+const SYSTEM_PROMPT = 'You are an expert in data analysis and AI assistant.';
+
 export const streamChat = async (req: Request, res: Response) => {
   try {
     const validationResult = chatRequestSchema.safeParse(req.body);
@@ -53,9 +55,14 @@ export const streamChat = async (req: Request, res: Response) => {
     // Emit chatId as the first event so client knows the chat ID immediately
     res.write(`data: ${JSON.stringify({ chatId: currentChatId })}\n\n`);
 
+    const chatMessages = [
+      { role: 'system' as const, content: SYSTEM_PROMPT },
+      ...messages.filter((m) => m.role !== 'system'),
+    ];
+
     const stream = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
-      messages: messages as any,
+      messages: chatMessages as any,
       temperature: 0.5,
       max_tokens: 2048,
       stream: true,
@@ -109,9 +116,14 @@ export const structuredChat = async (req: Request, res: Response) => {
 
     const { messages } = validationResult.data;
 
+    const chatMessages = [
+      { role: 'system' as const, content: SYSTEM_PROMPT },
+      ...messages.filter((m) => m.role !== 'system'),
+    ];
+
     const response = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
-      messages: messages as any,
+      messages: chatMessages as any,
       temperature: 0.5,
       max_tokens: 2048,
       response_format: {
