@@ -5,7 +5,7 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import { groq } from '../services/groq.service.ts';
 import * as chatDb from '../services/chatDb.service.ts';
 
-const SYSTEM_PROMPT = 'You are an expert in data analysis and AI assistant.';
+const SYSTEM_PROMPT = 'You are a helpful assistant.';
 
 export const streamChat = async (req: Request, res: Response) => {
   try {
@@ -62,6 +62,7 @@ export const streamChat = async (req: Request, res: Response) => {
 
     const stream = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       messages: chatMessages as any,
       temperature: 0.5,
       max_tokens: 2048,
@@ -123,6 +124,7 @@ export const structuredChat = async (req: Request, res: Response) => {
 
     const response = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       messages: chatMessages as any,
       temperature: 0.5,
       max_tokens: 2048,
