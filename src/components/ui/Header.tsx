@@ -11,6 +11,7 @@ export default function Header({ onNewChat, tokenUsage }: HeaderProps) {
   const currentChatId = useChatStore((state) => state.currentChatId);
   const chats = useChatStore((state) => state.chats);
   const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
+  
 
   const activeChat = chats.find((c) => c.id === currentChatId);
   const title = activeChat ? activeChat.title : 'New Chat';
