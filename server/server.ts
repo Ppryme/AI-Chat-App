@@ -13,17 +13,31 @@ dotenv.config();
 const app = express();
 app.use(helmet());
 
+const clientUrl = process.env.CLIENT_URL?.replace(/\/$/, '');
+
 const allowedOrigins = new Set([
   'http://localhost:5173',
-  process.env.CLIENT_URL,
+  clientUrl,
 ].filter(Boolean));
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.has(origin)) {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // Allow exact matches (localhost or configured CLIENT_URL)
+      if (allowedOrigins.has(origin)) {
         return callback(null, true);
       }
-      return callback(new Error('Blocked by CORS policy'));
+
+      // Allow Vercel preview/production domains if origin ends with .vercel.app
+      if (origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+
+      // Block any other origin cleanly without throwing an unhandled 500 exception
+      return callback(null, false);
     },
     credentials: true,
   })
