@@ -78,6 +78,7 @@ export const useChatStore = create<ChatState>((set) => ({
         messages: isCurrentActive ? [DEFAULT_SYSTEM_MESSAGE] : state.messages,
         tokenUsage: isCurrentActive ? null : state.tokenUsage,
         messagesLoading: false,
+        showScrollButton: isCurrentActive ? false : state.showScrollButton,
       };
     }),
   resetConversation: () =>
@@ -87,5 +88,6 @@ export const useChatStore = create<ChatState>((set) => ({
       input: '',
       tokenUsage: null,
       messagesLoading: false,
+      showScrollButton: false,
     }),
 }));

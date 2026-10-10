@@ -4,7 +4,7 @@ import { createParser, type EventSourceMessage } from 'eventsource-parser';
 import { useChatStore } from '../stores/chatStore';
 import { fetchChats, fetchChatMessages } from '../services/chatApi';
 
-const DEFAULT_SYSTEM_PROMPT = 'You are an expert in data analysis and AI assistant.';
+const DEFAULT_SYSTEM_PROMPT = 'You are a helpful assistant';
 
 export function useChat() {
   const messages = useChatStore((state) => state.messages);
@@ -45,7 +45,8 @@ export function useChat() {
   const handleScroll = () => {
     if (!chatContainerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-    const isScrolledUp = scrollHeight - scrollTop - clientHeight > 150;
+    const canScroll = scrollHeight > clientHeight;
+    const isScrolledUp = canScroll && scrollHeight - scrollTop - clientHeight > 150;
     setShowScrollButton(isScrolledUp);
   };
 
@@ -155,6 +156,10 @@ export function useChat() {
       setInput('');
       setTokenUsage(null);
       setCurrentChatId(chatId);
+      setShowScrollButton(false);
+      if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = 0;
+      }
       setSidebarOpen(false);
 
       try {
@@ -177,15 +182,19 @@ export function useChat() {
         setMessagesLoading(false);
       }
     },
-    [currentChatId, stopGeneration, setInput, setTokenUsage, setCurrentChatId, setSidebarOpen, setMessagesLoading, setMessages]
+    [currentChatId, stopGeneration, setInput, setTokenUsage, setCurrentChatId, setShowScrollButton, setSidebarOpen, setMessagesLoading, setMessages]
   );
 
   // Start fresh chat
   const startNewChat = useCallback(() => {
     stopGeneration();
     resetConversation();
+    setShowScrollButton(false);
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = 0;
+    }
     setSidebarOpen(false);
-  }, [stopGeneration, resetConversation, setSidebarOpen]);
+  }, [stopGeneration, resetConversation, setShowScrollButton, setSidebarOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

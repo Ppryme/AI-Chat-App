@@ -6,8 +6,11 @@ interface ScrollButtonProps {
 
 export default function ScrollButton({ onClick }: ScrollButtonProps) {
   const showScrollButton = useChatStore((state) => state.showScrollButton);
+  const hasMessages = useChatStore((state) =>
+    state.messages.some((m) => m.role !== 'system')
+  );
 
-  if (!showScrollButton) return null;
+  if (!showScrollButton || !hasMessages) return null;
 
   return (
     <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 z-10">
