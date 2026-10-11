@@ -47,7 +47,7 @@ export default function App() {
             </div>
           ) : (
             <motion.div
-              key={currentChatId || 'new-chat'}
+              key={currentChatId}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, ease: 'easeInOut' }}

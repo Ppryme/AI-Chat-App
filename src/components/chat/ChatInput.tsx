@@ -5,7 +5,7 @@ import { useChatStore } from '../../stores/chatStore';
 import { Square, ArrowUp, Plus } from 'lucide-react';
 
 interface ChatInputProps {
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: React.SubmitEvent) => void;
 }
 
 export default function ChatInput({ onSubmit }: ChatInputProps) {
