@@ -7,7 +7,8 @@ import * as chatDb from '../services/chatDb.service.ts';
 
 const SYSTEM_PROMPT = 'You are a helpful assistant.';
 
-export const streamChat = async (req: Request, res: Response) => {
+export 
+const streamChat = async (req: Request, res: Response) => {
   try {
     const validationResult = chatRequestSchema.safeParse(req.body);
 

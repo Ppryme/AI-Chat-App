@@ -28,11 +28,11 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       <div
         className={`min-w-0 leading-relaxed text-sm ${
           isUser
-            ? 'max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-br-xs px-4 py-3 bg-slate-800 text-slate-100 border border-slate-700/50 font-medium break-words'
+            ? 'max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-br-xs px-4 py-3 bg-slate-800 text-slate-100 border border-slate-700/50 font-medium wrap-break-words'
             : 'w-full max-w-full text-slate-200 px-0 py-1 text-left font-normal'
         }`}
       >
-        <div className="w-full min-w-0 overflow-hidden break-words [overflow-wrap:anywhere]">
+        <div className="w-full min-w-0 overflow-hidden wrap-break-words ">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
@@ -58,7 +58,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 
                 return (
                   <code
-                    className="bg-slate-800/80 px-1.5 py-0.5 rounded text-xs font-mono text-blue-300 break-words"
+                    className="bg-slate-800/80 px-1.5 py-0.5 rounded text-xs font-mono text-blue-300 wrap-anywhere wrap-break-words"
                     {...props}
                   >
                     {children}
@@ -67,7 +67,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
               },
 
               p: ({ children }) => (
-                <p className="mb-3 last:mb-0 leading-relaxed break-words">
+                <p className="mb-3 last:mb-0 leading-relaxed wrap-break-words">
                   {children}
                 </p>
               ),

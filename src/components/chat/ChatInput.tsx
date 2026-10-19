@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useRef, useEffect } from 'react';
+import  { useRef, useEffect } from 'react';
 import IconButton from '../ui/IconButton';
 import { useChatStore } from '../../stores/chatStore';
 import { Square, ArrowUp, Plus } from 'lucide-react';
@@ -18,7 +18,7 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      const maxHeight = 208; // 13rem (~8-9 lines)
+      const maxHeight = 108; // 10rem (~5-6 lines)
       const nextHeight = Math.min(textareaRef.current.scrollHeight, maxHeight);
       textareaRef.current.style.height = `${nextHeight}px`;
     }
@@ -34,7 +34,7 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
   };
 
   return (
-    <div className="p-3 sm:p-4 bg-slate-900 border-t border-slate-800/60 relative">
+    <div className="p-3 sm:p-4  border-t border-slate-800/60 relative">
       <form
         onSubmit={onSubmit}
         className="flex flex-col bg-slate-950 border border-slate-800 rounded-3xl p-3 shadow-inner focus-within:border-slate-600 transition-all"
@@ -76,7 +76,7 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
               }
               variant="primary"
               title={loading ? 'Stop generating' : 'Send message'}
-              className="w-8 h-8 !p-0 rounded-full"
+              className="w-8 h-8 p-0 rounded-full"
             />
           </div>
         </div>
