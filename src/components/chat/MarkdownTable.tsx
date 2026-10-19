@@ -19,7 +19,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const checkOverflow = useCallback(() => {
-    
+    if (!containerRef.current) return;
     const { scrollWidth, clientWidth, scrollLeft } = containerRef.current;
     const overflowing = scrollWidth > clientWidth + 2;
     setIsOverflowing(overflowing);
@@ -41,7 +41,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
   }, [checkOverflow]);
 
   const handleScroll = () => {
-    
+    if (!containerRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
 
     if (scrollLeft > 12 && !hasScrolled) {
