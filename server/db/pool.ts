@@ -1,5 +1,6 @@
 import pg from 'pg';
 import dotenv from 'dotenv';
+import type { PoolClient } from 'pg';
 
 dotenv.config();
 
@@ -27,15 +28,18 @@ pool.on('error', (err) => {
 });
 
 export async function testConnection(): Promise<boolean> {
+  let client: PoolClient | undefined;
   try {
-    const client = await pool.connect();
+    client = await pool.connect();
     const res = await client.query('SELECT NOW() AS current_time');
-    client.release();
+
     console.log('PostgreSQL connected successfully. Server time:', res.rows[0].current_time);
     return true;
   } catch (error: unknown) {
     const err = error as Error;
     console.error('PostgreSQL connection failed:', err.message);
     return false;
+  } finally {
+    client?.release();
   }
 }
