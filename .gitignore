@@ -23,6 +23,8 @@ lib-cov
 coverage
 *.lcov
 
+
+
 # nyc test coverage
 .nyc_output
 
@@ -78,6 +80,9 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
+
+# Supabase CA certificate
+/server/certs/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

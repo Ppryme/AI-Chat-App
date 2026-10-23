@@ -1,23 +1,49 @@
 import pg from 'pg';
 import dotenv from 'dotenv';
+import fs from 'fs';           
+import path from 'path';  
 import type { PoolClient } from 'pg';
 
-dotenv.config();
+dotenv.config({ path: 'server.env' });
 
 const { Pool } = pg;
 
-const connectionString = process.env.DATABASE_URL;
 
-if (!connectionString) {
-  console.error('CRITICAL: DATABASE_URL is not defined in the environment variables.');
+const rawConnectionString = process.env.DATABASE_URL;
+if (!rawConnectionString) {
+  throw new Error('CRITICAL: DATABASE_URL is not defined');
 }
 
-// Enable SSL when connecting to hosted providers like Supabase
-const isRemoteDb = connectionString?.includes('supabase.com') || connectionString?.includes('sslmode=require');
+const dbUrl = new URL(rawConnectionString);
+dbUrl.searchParams.delete('sslmode');
+
+const connectionString = dbUrl.toString();
+
+const isRemoteDb =
+  dbUrl.hostname.endsWith('.supabase.com') ||
+  dbUrl.hostname.endsWith('.supabase.co');
+
+  
+
+const caCert = process.env.SUPABASE_CA_CERT
+  ? process.env.SUPABASE_CA_CERT.replace(/\\n/g, '\n')
+  : fs.readFileSync(
+      path.join(process.cwd(), 'certs', 'prod-ca-2021.crt'),
+      'utf8'
+    );
+
+console.log('CA loaded:', caCert.includes('-----BEGIN CERTIFICATE-----'));
+console.log('CA length:', caCert.length);
+
+
+
 
 export const pool = new Pool({
-  connectionString,
-  ssl: isRemoteDb ? { rejectUnauthorized: false } : undefined,
+  connectionString: connectionString,
+  ssl: isRemoteDb ? {
+    rejectUnauthorized: true,
+    ca: caCert,
+  } : undefined,
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
@@ -27,17 +53,19 @@ pool.on('error', (err) => {
   console.error('Unexpected PostgreSQL client error on idle client:', err.message);
 });
 
+
+
 export async function testConnection(): Promise<boolean> {
   let client: PoolClient | undefined;
+
   try {
     client = await pool.connect();
     const res = await client.query('SELECT NOW() AS current_time');
 
-    console.log('PostgreSQL connected successfully. Server time:', res.rows[0].current_time);
+    console.log('PostgreSQL connected:', res.rows[0].current_time);
     return true;
-  } catch (error: unknown) {
-    const err = error as Error;
-    console.error('PostgreSQL connection failed:', err.message);
+  } catch (error) {
+    console.error('PostgreSQL connection failed:', error);
     return false;
   } finally {
     client?.release();
