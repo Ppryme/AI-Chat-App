@@ -5,7 +5,7 @@ export interface ChatRow {
   title: string;
   created_at: string;
   updated_at: string;
-  message_count?: number;
+  message_count?: string;
 }
 
 export interface MessageRow {
@@ -24,7 +24,7 @@ export async function listChatsWithCount(): Promise<ChatRow[]> {
       c.title, 
       c.created_at, 
       c.updated_at, 
-      COUNT(m.id)::int AS message_count
+      COUNT(m.id) AS message_count
     FROM chats c
     LEFT JOIN messages m ON c.id = m.chat_id
     GROUP BY c.id
@@ -75,6 +75,7 @@ export async function renameChat(chatId: string, title: string): Promise<ChatRow
     SET title = $1, updated_at = NOW()
     WHERE id = $2
     RETURNING id, title, created_at, updated_at;
+    
   `;
   const result = await pool.query<ChatRow>(query, [title, chatId]);
   return result.rows[0] ?? null;

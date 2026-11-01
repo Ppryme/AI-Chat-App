@@ -32,8 +32,7 @@ const caCert = process.env.SUPABASE_CA_CERT
       'utf8'
     );
 
-console.log('CA loaded:', caCert.includes('-----BEGIN CERTIFICATE-----'));
-console.log('CA length:', caCert.length);
+
 
 
 
