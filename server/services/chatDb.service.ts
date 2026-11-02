@@ -86,7 +86,7 @@ export async function deleteChat(chatId: string): Promise<boolean> {
   const query = `
     DELETE FROM chats
     WHERE id = $1
-    RETURNING id;
+    
   `;
   const result = await pool.query(query, [chatId]);
   return (result.rowCount ?? 0) > 0;
