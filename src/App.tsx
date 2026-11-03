@@ -32,7 +32,7 @@ export default function App() {
 
       {/* Main Chat Area */}
       <main className="flex-1 flex flex-col h-full min-w-0 bg-slate-900 border-l border-slate-800/80 overflow-hidden relative">
-        {/* --- TOP HEADER (Sticky & Permanently Anchored) --- */}
+        {/* TOP HEADER  */}
         <Header onNewChat={startNewChat} tokenUsage={tokenUsage} />
 
         {/* --- CHAT MESSAGES CONTAINER --- */}
@@ -59,7 +59,7 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* AI Thinking Bubble (Only during active token generation) */}
+          {/* AI Thinking Animation Bubble */}
           {loading && (
             <div className="flex justify-start">
               <div className="text-slate-400 text-sm py-1 animate-pulse flex items-center gap-2">

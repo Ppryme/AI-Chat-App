@@ -114,7 +114,7 @@ export function useChat() {
     setLoading(false);
   }, [stopDisplayLoop, setLoading]);
 
-  // Clean up timer and in-flight fetch when unmounting
+  
   useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
@@ -127,7 +127,7 @@ export function useChat() {
   }, []);
 
   // Refresh conversation history list
-  const refreshConversations = useCallback(async () => {
+  const loadChats = useCallback(async () => {
     try {
       setChatsLoading(true);
       const chats = await fetchChats();
@@ -141,8 +141,8 @@ export function useChat() {
 
   // Initial load of past chats on mount
   useEffect(() => {
-    refreshConversations();
-  }, [refreshConversations]);
+    loadChats();
+  }, [loadChats]);
 
   // Load a selected conversation's messages from PostgreSQL
   const loadConversation = useCallback(
@@ -254,7 +254,7 @@ export function useChat() {
           const data = event.data;
           if (data === '[DONE]') {
             streamDoneRef.current = true;
-            refreshConversations();
+            loadChats();
             return;
           }
           try {
@@ -307,7 +307,7 @@ export function useChat() {
 
       streamDoneRef.current = true;
       startDisplayLoop();
-      refreshConversations();
+      loadChats();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -375,6 +375,6 @@ export function useChat() {
     streamDoneRef,
     loadConversation,
     startNewChat,
-    refreshConversations,
+    loadChats,
   };
 }
