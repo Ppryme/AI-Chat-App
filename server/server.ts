@@ -23,16 +23,12 @@ const allowedOrigins = new Set([
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, server-to-server)
-      if (!origin) return callback(null, true);
+
 
       // Allow exact matches (localhost or configured CLIENT_URL)
       if (allowedOrigins.has(origin)) {
         return callback(null, true);
       }
-
-
-     
 
       // Block any other origin cleanly without throwing an unhandled 500 exception
       return callback(null, false);
@@ -44,16 +40,15 @@ app.use(
 app.use(express.json({ limit: '2mb' }));
 
 // Health-check endpoint for deployment verification
-app.get(['/api/health', '/health'], (_req, res) => {
+app.get(['/api/health'], (_req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  
 });
 
 // Mount routes with and without /api prefix for Vercel routing flexibility
 app.use('/api/chat', chatRoutes);
-app.use('/chat', chatRoutes);
-
 app.use('/api/chats', conversationRoutes);
-app.use('/chats', conversationRoutes);
+
 
 // Export for Vercel Serverless Function entry point
 export default app;
