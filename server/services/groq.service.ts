@@ -5,6 +5,6 @@ dotenv.config();
 
 export const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
-  timeout: 20 * 1000, 
-  maxRetries: 2,
+  timeout: 5 * 1000, 
+  maxRetries: 20,
 });

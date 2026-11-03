@@ -31,10 +31,8 @@ app.use(
         return callback(null, true);
       }
 
-      // Allow Vercel preview/production domains if origin ends with .vercel.app
-      if (origin.endsWith('.vercel.app')) {
-        return callback(null, true);
-      }
+
+     
 
       // Block any other origin cleanly without throwing an unhandled 500 exception
       return callback(null, false);
