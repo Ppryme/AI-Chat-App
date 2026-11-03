@@ -24,7 +24,6 @@ app.use(
   cors({
     origin: (origin, callback) => {
 
-
       // Allow exact matches (localhost or configured CLIENT_URL)
       if (allowedOrigins.has(origin)) {
         return callback(null, true);

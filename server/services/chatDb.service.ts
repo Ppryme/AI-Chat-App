@@ -72,7 +72,7 @@ export async function getMessagesByChatId(chatId: string): Promise<MessageRow[]>
 export async function renameChat(chatId: string, title: string): Promise<ChatRow | null> {
   const query = `
     UPDATE chats
-    SET title = $1, updated_at = NOW()
+    SET title = $1
     WHERE id = $2
     RETURNING id, title, created_at, updated_at;
     
