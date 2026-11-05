@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRef, useEffect, useCallback } from 'react';
-import { createParser, type EventSourceMessage } from 'eventsource-parser';
 import { useChatStore } from '../stores/chatStore';
 import { fetchChats, fetchChatMessages } from '../services/chatApi';
+import { streamChat } from '../services/chatStream';
+import { useChatScroll } from './useChatScroll';
 
 const DEFAULT_SYSTEM_PROMPT = 'You are a helpful assistant';
 
@@ -14,7 +14,6 @@ export function useChat() {
   const loading = useChatStore((state) => state.loading);
   const setLoading = useChatStore((state) => state.setLoading);
   const setTokenUsage = useChatStore((state) => state.setTokenUsage);
-  const setShowScrollButton = useChatStore((state) => state.setShowScrollButton);
 
   const currentChatId = useChatStore((state) => state.currentChatId);
   const setCurrentChatId = useChatStore((state) => state.setCurrentChatId);
@@ -23,6 +22,8 @@ export function useChat() {
   const resetConversation = useChatStore((state) => state.resetConversation);
   const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
   const setMessagesLoading = useChatStore((state) => state.setMessagesLoading);
+ 
+  const setChatError = useChatStore((state) => state.setChatError);
 
   const bufferRef = useRef('');
   const displayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -30,36 +31,16 @@ export function useChat() {
   const displayedReplyRef = useRef('');
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior,
-      });
-    }
-  }, []);
-
-  const handleScroll = () => {
-    if (!chatContainerRef.current) return;
-    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-    const canScroll = scrollHeight > clientHeight;
-    const isScrolledUp = canScroll && scrollHeight - scrollTop - clientHeight > 150;
-    setShowScrollButton(isScrolledUp);
-  };
-
-  // Only auto-scroll on message changes if user is already near the bottom
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-      const isNearBottom = scrollHeight - scrollTop - clientHeight <= 150;
-      if (isNearBottom) {
-        scrollToBottom(loading ? 'auto' : 'smooth');
-      }
-    }
-  }, [messages, loading, scrollToBottom]);
+  const {
+    chatContainerRef,
+    messagesEndRef,
+    scrollToBottom,
+    handleScroll,
+    resetScroll,
+  } = useChatScroll({
+    messages,
+    loading,
+  });
 
   const stopDisplayLoop = useCallback(() => {
     if (displayTimerRef.current) {
@@ -72,17 +53,17 @@ export function useChat() {
     if (displayTimerRef.current) return;
 
     displayTimerRef.current = setInterval(() => {
-      // If buffer is drained
+      // checking if stream buffer is drained
       if (bufferRef.current.length === 0) {
         if (streamDoneRef.current) {
           clearInterval(displayTimerRef.current!);
           displayTimerRef.current = null;
-          setLoading(false); // Loading only finishes once the animation is fully drained
+          setLoading(false); // finalizing loading state once stream animation finishes draining
         }
         return;
       }
 
-      // Handle multi-byte unicode characters safely without splitting
+      // slicing unicode characters safely without splitting multi-byte code units
       const chars = Array.from(bufferRef.current);
       const chunkSize = Math.max(2, Math.ceil(chars.length / 25));
       const nextCharacters = chars.slice(0, chunkSize).join('');
@@ -126,25 +107,27 @@ export function useChat() {
     };
   }, []);
 
-  // Refresh conversation history list
+  // refreshing conversation history list from backend
   const loadChats = useCallback(async () => {
     try {
       setChatsLoading(true);
+      setChatError(false);
       const chats = await fetchChats();
       setChats(chats);
     } catch (err) {
       console.error('Failed to load conversations:', err);
+      setChatError(true);
     } finally {
       setChatsLoading(false);
     }
-  }, [setChats, setChatsLoading]);
+  }, [setChats, setChatsLoading, setChatError]);
 
-  // Initial load of past chats on mount
+  // loading initial past chats on component mount
   useEffect(() => {
     loadChats();
   }, [loadChats]);
 
-  // Load a selected conversation's messages from PostgreSQL
+  // loading selected conversation messages from postgresql
   const loadConversation = useCallback(
     async (chatId: string) => {
       if (chatId === currentChatId) {
@@ -156,10 +139,7 @@ export function useChat() {
       setInput('');
       setTokenUsage(null);
       setCurrentChatId(chatId);
-      setShowScrollButton(false);
-      if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop = 0;
-      }
+      resetScroll();
       setSidebarOpen(false);
 
       try {
@@ -182,19 +162,16 @@ export function useChat() {
         setMessagesLoading(false);
       }
     },
-    [currentChatId, stopGeneration, setInput, setTokenUsage, setCurrentChatId, setShowScrollButton, setSidebarOpen, setMessagesLoading, setMessages]
+    [currentChatId, stopGeneration, setInput, setTokenUsage, setCurrentChatId, resetScroll, setSidebarOpen, setMessagesLoading, setMessages]
   );
 
-  // Start fresh chat
+  // resetting state to start a fresh chat session
   const startNewChat = useCallback(() => {
     stopGeneration();
     resetConversation();
-    setShowScrollButton(false);
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = 0;
-    }
+    resetScroll();
     setSidebarOpen(false);
-  }, [stopGeneration, resetConversation, setShowScrollButton, setSidebarOpen]);
+  }, [stopGeneration, resetConversation, resetScroll, setSidebarOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,93 +194,35 @@ export function useChat() {
     setInput('');
     setLoading(true);
 
+
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
     try {
-      const response = await fetch('/api/chat/stream', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      await streamChat(
+        {
           messages: updatedMessages,
           chatId: currentChatId || undefined,
-        }),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        let errorMessage = 'Connection Failed. Check network connection and Try Again';
-        try {
-          const errorData = await response.json();
-          if (errorData && errorData.error) {
-            errorMessage = errorData.error;
-          }
-        // eslint-disable-next-line no-empty
-        } catch (e) {}
-        throw new Error(errorMessage);
-      }
-
-      if (!response.body) throw new Error('Connection Failed. No response body.');
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let streamError: string | null = null;
-
-      const parser = createParser({
-        onEvent(event: EventSourceMessage) {
-          const data = event.data;
-          if (data === '[DONE]') {
-            streamDoneRef.current = true;
-            loadChats();
-            return;
-          }
-          try {
-            const parsed = JSON.parse(data);
-            const parsedError: string = 'Streaming Failed';
-
-            if (parsed.error) {
-              streamError = typeof parsed.error === 'string' ? parsed.error : parsedError;
-              return;
-            }
-
-            // Sync chatId assigned by backend for newly created conversation
-            if (parsed.chatId && !currentChatId) {
-              setCurrentChatId(parsed.chatId);
-            }
-
-            if (parsed.content) {
-              bufferRef.current += parsed.content;
-              startDisplayLoop();
-            }
-
-            if (parsed.usage) {
-              setTokenUsage({
-                prompt: parsed.usage.prompt_tokens,
-                completion: parsed.usage.completion_tokens,
-                total: parsed.usage.total_tokens,
-              });
-            }
-          } catch (error) {
-            console.error('SSE JSON parse error:', data, error);
-          }
+          signal: controller.signal,
         },
-      });
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        parser.feed(decoder.decode(value, { stream: true }));
-
-        if (streamError) {
-          throw new Error(streamError);
+        {
+          onChatId: (assignedChatId) => {
+            if (!currentChatId) {
+              setCurrentChatId(assignedChatId);
+            }
+          },
+          onContent: (chunk) => {
+            bufferRef.current += chunk;
+            startDisplayLoop();
+          },
+          onUsage: (usage) => {
+            setTokenUsage(usage);
+          },
+          onDone: () => {
+            streamDoneRef.current = true;
+          },
         }
-      }
-
-      parser.feed(decoder.decode());
-
-      if (streamError) {
-        throw new Error(streamError);
-      }
+      );
 
       streamDoneRef.current = true;
       startDisplayLoop();

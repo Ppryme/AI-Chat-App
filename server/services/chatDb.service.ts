@@ -16,7 +16,7 @@ export interface MessageRow {
   created_at: string;
 }
 
-// 1. SELECT with JOIN and GROUP BY: Retrieves all conversations along with their total message count
+// retrieving all conversations joined with message counts grouped by chat id
 export async function listChatsWithCount(): Promise<ChatRow[]> {
   const query = `
     SELECT 
@@ -34,7 +34,7 @@ export async function listChatsWithCount(): Promise<ChatRow[]> {
   return result.rows;
 }
 
-// 2. INSERT: Creates a new chat record and returns the created row
+// inserting a new chat record and returning the created row
 export async function createChat(title: string): Promise<ChatRow> {
   const query = `
     INSERT INTO chats (title)
@@ -45,7 +45,7 @@ export async function createChat(title: string): Promise<ChatRow> {
   return result.rows[0];
 }
 
-// 3. SELECT with WHERE: Checks whether a specific chat exists
+// querying a chat record by its id
 export async function getChatById(chatId: string): Promise<ChatRow | null> {
   const query = `
     SELECT id, title, created_at, updated_at
@@ -56,7 +56,7 @@ export async function getChatById(chatId: string): Promise<ChatRow | null> {
   return result.rows[0] ?? null;
 }
 
-// 4. SELECT with WHERE and ORDER BY: Loads full conversation history ordered chronologically
+// querying messages for a conversation ordered chronologically by creation timestamp
 export async function getMessagesByChatId(chatId: string): Promise<MessageRow[]> {
   const query = `
     SELECT id, chat_id, role, content, created_at
@@ -68,7 +68,7 @@ export async function getMessagesByChatId(chatId: string): Promise<MessageRow[]>
   return result.rows;
 }
 
-// 5. UPDATE with WHERE: Renames a conversation and updates its timestamp
+// updating conversation title and timestamp by chat id
 export async function renameChat(chatId: string, title: string): Promise<ChatRow | null> {
   const query = `
     UPDATE chats
@@ -81,7 +81,7 @@ export async function renameChat(chatId: string, title: string): Promise<ChatRow
   return result.rows[0] ?? null;
 }
 
-// 6. DELETE with WHERE: Deletes a conversation; ON DELETE CASCADE removes associated messages
+// deleting a conversation record by id with cascade removal of messages
 export async function deleteChat(chatId: string): Promise<boolean> {
   const query = `
     DELETE FROM chats
@@ -92,7 +92,7 @@ export async function deleteChat(chatId: string): Promise<boolean> {
   return (result.rowCount ?? 0) > 0;
 }
 
-// 7. INSERT: Persists a single message linked to a conversation
+// inserting a single message record linked to a conversation
 export async function saveMessage(
   chatId: string,
   role: 'user' | 'assistant' | 'system',
@@ -107,7 +107,7 @@ export async function saveMessage(
   return result.rows[0];
 }
 
-// 8. UPDATE with WHERE: Updates the updated_at timestamp when new messages arrive
+// updating the updated_at timestamp for a conversation
 export async function touchChat(chatId: string): Promise<void> {
   const query = `
     UPDATE chats

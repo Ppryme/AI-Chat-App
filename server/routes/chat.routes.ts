@@ -4,7 +4,7 @@ import { limiter, dailyLimiter } from '../middleware/rateLimiter.ts';
 
 const router = Router();
 
-// Apply rate limiters to all chat routes
+// applying rate limiters to all chat routes
 router.use(limiter);
 router.use(dailyLimiter);
 

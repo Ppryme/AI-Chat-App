@@ -6,7 +6,7 @@ import {
 } from '../schemas/conversation.schema.ts';
 import * as chatDb from '../services/chatDb.service.ts';
 
-// GET /api/chats
+// retrieving all conversations with message counts
 export async function getConversations(_req: Request, res: Response): Promise<void> {
   try {
     const chats = await chatDb.listChatsWithCount();
@@ -17,7 +17,7 @@ export async function getConversations(_req: Request, res: Response): Promise<vo
   }
 }
 
-// POST /api/chats
+// creating a new conversation
 export async function createConversation(req: Request, res: Response): Promise<void> {
   try {
     const parsed = createChatSchema.safeParse(req.body);
@@ -34,7 +34,7 @@ export async function createConversation(req: Request, res: Response): Promise<v
   }
 }
 
-// GET /api/chats/:chatId/messages
+// retrieving messages for a specific conversation
 export async function getConversationMessages(req: Request, res: Response): Promise<void> {
   try {
     const parsedParams = chatIdParamSchema.safeParse(req.params);
@@ -58,7 +58,7 @@ export async function getConversationMessages(req: Request, res: Response): Prom
   }
 }
 
-// PATCH /api/chats/:chatId
+// renaming a conversation and updating its timestamp
 export async function renameConversation(req: Request, res: Response): Promise<void> {
   try {
     const parsedParams = chatIdParamSchema.safeParse(req.params);
@@ -88,7 +88,7 @@ export async function renameConversation(req: Request, res: Response): Promise<v
   }
 }
 
-// DELETE /api/chats/:chatId
+// deleting a conversation by id
 export async function deleteConversation(req: Request, res: Response): Promise<void> {
   try {
     const parsedParams = chatIdParamSchema.safeParse(req.params);

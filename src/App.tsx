@@ -27,15 +27,15 @@ export default function App() {
 
   return (
     <div className="flex h-dvh w-full bg-slate-950 text-slate-100 overflow-hidden font-sans fixed inset-0">
-      {/* Sidebar displaying only conversation history */}
+      {/* rendering sidebar displaying conversation history */}
       <Sidebar onSelectChat={loadConversation} onNewChat={startNewChat} />
 
-      {/* Main Chat Area */}
+      {/* rendering main chat container */}
       <main className="flex-1 flex flex-col h-full min-w-0 bg-slate-900 border-l border-slate-800/80 overflow-hidden relative">
-        {/* TOP HEADER  */}
+        {/* rendering header component */}
         <Header onNewChat={startNewChat} tokenUsage={tokenUsage} />
 
-        {/* --- CHAT MESSAGES CONTAINER --- */}
+        {/* rendering chat messages scroll container */}
         <div
           ref={chatContainerRef}
           onScroll={handleScroll}
@@ -59,7 +59,7 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* AI Thinking Animation Bubble */}
+          {/* rendering ai thinking animation indicator */}
           {loading && (
             <div className="flex justify-start">
               <div className="text-slate-400 text-sm py-1 animate-pulse flex items-center gap-2">
@@ -72,7 +72,7 @@ export default function App() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* --- INPUT SECTION --- */}
+        {/* rendering chat input and scroll button section */}
         <footer className="relative shrink-0">
           <ScrollButton onClick={() => scrollToBottom('smooth')} />
           <ChatInput onSubmit={loading ? stopGeneration : handleSubmit} />

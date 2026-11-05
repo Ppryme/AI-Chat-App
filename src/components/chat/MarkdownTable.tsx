@@ -51,7 +51,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 6);
   };
 
-  // Close modal on Escape key
+  // closing modal on escape key press
   useEffect(() => {
     if (!isExpanded) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -66,7 +66,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
   return (
     <>
       <div className="my-4 w-full max-w-full rounded-xl border border-slate-800 bg-slate-950/40 overflow-hidden shadow-xs">
-        {/* Top toolbar when table is overflowing or has wide content */}
+        {/*  top toolbar when table content overflows */}
         {isOverflowing && (
           <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900/70 border-b border-slate-800/80 text-xs text-slate-400">
             <div className="flex items-center gap-2">
@@ -92,9 +92,9 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
           </div>
         )}
 
-        {/* Scrollable table container */}
+        {/* rendering scrollable table container */}
         <div className="relative w-full">
-          {/* Subtle Right Gradient Shadow when more columns exist to the right */}
+          {/* rendering right gradient shadow when columns overflow to the right */}
           {canScrollRight && (
             <div
               className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-linear-to-l from-slate-950/90 via-slate-950/40 to-transparent transition-opacity duration-200 z-15"
@@ -117,7 +117,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
         </div>
       </div>
 
-      {/* Fullscreen Expansion Modal */}
+      {/* rendering fullscreen expansion modal */}
       {isExpanded &&
         createPortal(
           <div
@@ -128,7 +128,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
               className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-6xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal Header */}
+              {/* rendering modal header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-950/80 shrink-0">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold text-slate-100">
@@ -147,7 +147,7 @@ export function MarkdownTable({ children, ...props }: MarkdownTableProps) {
                 </button>
               </div>
 
-              {/* Modal Table Content */}
+              {/* rendering modal table content */}
               <div className="flex-1 overflow-auto p-3 sm:p-5">
                 <div className="min-w-full rounded-xl border border-slate-800 overflow-hidden bg-slate-950/60">
                   <div className="overflow-x-auto">

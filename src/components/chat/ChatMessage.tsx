@@ -129,7 +129,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
                 <hr className="my-3 border-slate-800" />
               ),
 
-              /* TABLE */
+              /* markdown table element mappings */
               table: MarkdownTable,
               thead: TableHead,
               tbody: TableBody,

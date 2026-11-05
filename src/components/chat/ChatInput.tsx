@@ -14,11 +14,11 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
   const loading = useChatStore((state) => state.loading);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-resize textarea height as text grows up to a maximum height
+  // auto-resizing textarea height as text grows up to maximum height
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      const maxHeight = 108; // 10rem (~5-6 lines)
+      const maxHeight = 108; 
       const nextHeight = Math.min(textareaRef.current.scrollHeight, maxHeight);
       textareaRef.current.style.height = `${nextHeight}px`;
     }
@@ -39,7 +39,7 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
         onSubmit={onSubmit}
         className="flex flex-col bg-slate-950 border border-slate-800 rounded-3xl p-3 shadow-inner focus-within:border-slate-600 transition-all"
       >
-        {/* Top Textarea Area */}
+        {/* rendering message textarea input */}
         <textarea
           ref={textareaRef}
           rows={1}
@@ -50,9 +50,9 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
           className="w-full bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none resize-none px-2 pt-1 text-sm leading-relaxed max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700"
         />
 
-        {/* Bottom Actions Row (ChatGPT Style) */}
+        {/*  bottom action controls row */}
         <div className="flex items-center justify-between mt-2 pt-1">
-          {/* Left Action Buttons */}
+          
           <div className="flex items-center gap-1">
             <IconButton
               type="button"
@@ -62,7 +62,7 @@ export default function ChatInput({ onSubmit }: ChatInputProps) {
             />
           </div>
 
-          {/* Right Action / Submit Button */}
+          {/* send and stop generation submit button */}
           <div className="flex items-center gap-2">
             <IconButton
               type="submit"

@@ -17,6 +17,7 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
   const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
   const updateChatTitleInStore = useChatStore((state) => state.updateChatTitleInStore);
   const removeChatFromStore = useChatStore((state) => state.removeChatFromStore);
+  const chatError = useChatStore((state) => state.chatError);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
@@ -69,7 +70,7 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile backdrop */}
+      {/*  mobile overlay backdrop */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -77,13 +78,13 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
         />
       )}
 
-      {/* Sidebar container */}
+      {/*  sidebar navigation container */}
       <aside
         className={`fixed sm:static inset-y-0 left-0 z-40 w-64 bg-slate-950 sm:bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-200 ease-in-out ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
         }`}
       >
-        {/* Top Header / New Chat Button */}
+        {/*  sidebar header with new chat button */}
         <div className="p-3 border-b border-slate-800/80 flex items-center justify-between gap-2">
           <button
             onClick={onNewChat}
@@ -102,7 +103,7 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
           </button>
         </div>
 
-        {/* Conversation List */}
+        {/*  scrollable conversation list */}
         <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-800">
           <div className="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
             Conversations
@@ -117,6 +118,12 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
           {!chatsLoading && chats.length === 0 && (
             <div className="p-4 text-xs text-slate-500 text-center">
               No conversations yet.
+            </div>
+          )}
+
+          {chatError && !chatsLoading && (
+            <div className="p-4 text-xs text-red-500 text-center">
+              Failed to load conversations.
             </div>
           )}
 
@@ -196,7 +203,7 @@ export default function Sidebar({ onSelectChat, onNewChat }: SidebarProps) {
         </div>
       </aside>
 
-      {/* Custom Confirmation Modal for deletion */}
+      {/*  confirmation modal for chat deletion */}
       <DeleteModal
         isOpen={deleteModalOpen}
         chatTitle={chatToDelete?.title}

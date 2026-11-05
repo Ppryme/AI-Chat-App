@@ -45,7 +45,7 @@ export const pool = new Pool({
   } : undefined,
   max: 5,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 1000,
+  connectionTimeoutMillis: 10000,
 });
 
 pool.on('error', (err) => {

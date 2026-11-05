@@ -21,30 +21,30 @@ const streamChat = async (req: Request, res: Response) => {
 
     const { messages, chatId: incomingChatId } = validationResult.data;
 
-    // Resolve or create conversation in PostgreSQL
+    // creating conversation in postgresql
     let currentChatId = incomingChatId;
     const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user');
 
     if (!currentChatId) {
-      // Derive chat title from first user message, truncated (~50 chars)
+      // deriving chat title from first user message, truncated (~50 chars)
       const firstUserMsg = messages.find((m) => m.role === 'user')?.content || 'New Chat';
       const title = firstUserMsg.length > 50 ? `${firstUserMsg.slice(0, 47)}...` : firstUserMsg;
       const newChat = await chatDb.createChat(title);
       currentChatId = newChat.id;
     } else {
-      // Validate that existing chat actually exists in DB
+      // validating existing chat in db
       const existingChat = await chatDb.getChatById(currentChatId);
       if (!existingChat) {
         return res.status(404).json({ error: 'Conversation not found' });
       }
     }
 
-    // Persist the user message before streaming
+    // persisting the user message before streaming
     if (lastUserMessage) {
       await chatDb.saveMessage(currentChatId, 'user', lastUserMessage.content);
     }
 
-    // SSE headers
+    // setting sse response headers
     res.status(200);
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
@@ -53,7 +53,7 @@ const streamChat = async (req: Request, res: Response) => {
 
     res.flushHeaders();
 
-    // Emit chatId as the first event so client knows the chat ID immediately
+    // emitting chatId as the first sse event so client receives id immediately
     res.write(`data: ${JSON.stringify({ chatId: currentChatId })}\n\n`);
 
     const chatMessages = [
@@ -85,7 +85,7 @@ const streamChat = async (req: Request, res: Response) => {
 
     if (totalUsage) res.write(`data: ${JSON.stringify({ usage: totalUsage })}\n\n`);
 
-    // Persist completed assistant message and touch chat updated_at
+    // persisting completed assistant message and updating chat timestamp
     if (fullAssistantResponse) {
       await chatDb.saveMessage(currentChatId, 'assistant', fullAssistantResponse);
       await chatDb.touchChat(currentChatId);

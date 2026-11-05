@@ -1,11 +1,9 @@
 -- ==============================================================================
 -- Schema: PostgreSQL Chat History
 -- ==============================================================================
--- Exactly two tables:
--- 1. chats: stores conversation metadata (id, title, timestamps)
--- 2. messages: stores individual chat messages linked to a chat
+-- storing conversation metadata in chats and linked messages in messages table
 
--- Table 1: chats
+-- chats table storing conversation metadata
 CREATE TABLE IF NOT EXISTS chats (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
@@ -13,7 +11,7 @@ CREATE TABLE IF NOT EXISTS chats (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() 
 );
 
--- Table 2: messages
+-- messages table storing individual chat messages linked to a chat
 CREATE TABLE IF NOT EXISTS messages (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
     chat_id UUID NOT NULL REFERENCES chats(id) ON DELETE CASCADE,
@@ -22,5 +20,5 @@ CREATE TABLE IF NOT EXISTS messages (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW() 
 );
 
--- Index on chat_id for fast message retrieval by conversation
+-- indexing chat_id for fast message retrieval by conversation
 CREATE INDEX IF NOT EXISTS idx_messages_chat_id ON messages(chat_id);

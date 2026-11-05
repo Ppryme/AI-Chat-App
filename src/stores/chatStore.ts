@@ -17,6 +17,7 @@ interface ChatState {
   chats: Chat[];
   chatsLoading: boolean;
   sidebarOpen: boolean;
+  chatError: boolean ;
 
   setMessages: (messages: Message[] | ((prev: Message[]) => Message[])) => void;
   setTokenUsage: (usage: TokenUsage | null) => void;
@@ -31,6 +32,7 @@ interface ChatState {
   updateChatTitleInStore: (chatId: string, newTitle: string) => void;
   removeChatFromStore: (chatId: string) => void;
   resetConversation: () => void;
+  setChatError: (error: boolean ) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -44,6 +46,7 @@ export const useChatStore = create<ChatState>((set) => ({
   chats: [],
   chatsLoading: false,
   sidebarOpen: false,
+  chatError: false,
 
   setMessages: (messages) =>
     set((state) => ({
@@ -90,4 +93,5 @@ export const useChatStore = create<ChatState>((set) => ({
       messagesLoading: false,
       showScrollButton: false,
     }),
+    setChatError: (chatError) => set({ chatError }),
 }));

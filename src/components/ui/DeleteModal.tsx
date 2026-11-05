@@ -43,7 +43,7 @@ export default function DeleteModal({
         className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm sm:max-w-md shadow-2xl p-5 overflow-hidden animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header & Icon */}
+        {/* rendering modal header and icon */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
@@ -69,7 +69,7 @@ export default function DeleteModal({
           </button>
         </div>
 
-        {/* Content Body */}
+        {/* rendering warning message body */}
         <div className="mt-4 p-3 rounded-lg bg-slate-950/60 border border-slate-800/80">
           <div className="flex items-start gap-2.5">
             <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
@@ -87,7 +87,7 @@ export default function DeleteModal({
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* rendering confirmation and cancellation action buttons */}
         <div className="mt-5 flex items-center justify-end gap-2.5">
           <button
             type="button"

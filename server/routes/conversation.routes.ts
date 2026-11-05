@@ -6,12 +6,9 @@ import {
   renameConversation,
   deleteConversation,
 } from '../controllers/conversation.controller.ts';
-import { limiter } from '../middleware/rateLimiter.ts';
+
 
 const router = Router();
-
-// Apply standard rate limiter
-router.use(limiter);
 
 router.get('/', getConversations);
 router.post('/', createConversation);
