@@ -3,6 +3,7 @@ import { useChatStore } from '../stores/chatStore';
 import { fetchChats, fetchChatMessages } from '../services/chatApi';
 import { streamChat } from '../services/chatStream';
 import { useChatScroll } from './useChatScroll';
+import { useChatStreamController } from './useChatStreamController';
 
 const DEFAULT_SYSTEM_PROMPT = 'You are a helpful assistant';
 
@@ -25,11 +26,14 @@ export function useChat() {
  
   const setChatError = useChatStore((state) => state.setChatError);
 
-  const bufferRef = useRef('');
-  const displayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const streamDoneRef = useRef(false);
-  const displayedReplyRef = useRef('');
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const {
+    resetStream,
+    appendChunk,
+    finishStream,
+    stopDisplay,
+  } = useChatStreamController();
 
   const {
     chatContainerRef,
@@ -42,68 +46,19 @@ export function useChat() {
     loading,
   });
 
-  const stopDisplayLoop = useCallback(() => {
-    if (displayTimerRef.current) {
-      clearInterval(displayTimerRef.current);
-      displayTimerRef.current = null;
-    }
-  }, []);
-
-  const startDisplayLoop = useCallback(() => {
-    if (displayTimerRef.current) return;
-
-    displayTimerRef.current = setInterval(() => {
-      // checking if stream buffer is drained
-      if (bufferRef.current.length === 0) {
-        if (streamDoneRef.current) {
-          clearInterval(displayTimerRef.current!);
-          displayTimerRef.current = null;
-          setLoading(false); // finalizing loading state once stream animation finishes draining
-        }
-        return;
-      }
-
-      // slicing unicode characters safely without splitting multi-byte code units
-      const chars = Array.from(bufferRef.current);
-      const chunkSize = Math.max(2, Math.ceil(chars.length / 25));
-      const nextCharacters = chars.slice(0, chunkSize).join('');
-      bufferRef.current = chars.slice(chunkSize).join('');
-
-      displayedReplyRef.current += nextCharacters;
-
-      setMessages((prev) => {
-        const updated = [...prev];
-        if (updated.length > 0 && updated[updated.length - 1].role === 'assistant') {
-          updated[updated.length - 1] = {
-            role: 'assistant',
-            content: displayedReplyRef.current,
-          };
-        }
-        return updated;
-      });
-    }, 20);
-  }, [setLoading, setMessages]);
-
   const stopGeneration = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
-    stopDisplayLoop();
-    bufferRef.current = '';
-    streamDoneRef.current = true;
-    setLoading(false);
-  }, [stopDisplayLoop, setLoading]);
 
-  
+    stopDisplay();
+  }, [stopDisplay]);
+
+  // aborting pending network request on unmount
   useEffect(() => {
     return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      if (displayTimerRef.current) {
-        clearInterval(displayTimerRef.current);
-      }
+      abortControllerRef.current?.abort();
     };
   }, []);
 
@@ -178,14 +133,11 @@ export function useChat() {
 
     if (!input.trim() || loading) return;
 
-    stopDisplayLoop();
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
 
-    bufferRef.current = '';
-    displayedReplyRef.current = '';
-    streamDoneRef.current = false;
+    resetStream();
 
     const userMessage = { role: 'user' as const, content: input.trim() };
     const updatedMessages = [...messages, userMessage];
@@ -193,7 +145,6 @@ export function useChat() {
     setMessages([...updatedMessages, { role: 'assistant', content: '' }]);
     setInput('');
     setLoading(true);
-
 
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -212,22 +163,16 @@ export function useChat() {
             }
           },
           onContent: (chunk) => {
-            bufferRef.current += chunk;
-            startDisplayLoop();
+            appendChunk(chunk);
           },
           onUsage: (usage) => {
             setTokenUsage(usage);
           },
-          onDone: () => {
-            streamDoneRef.current = true;
-          },
         }
       );
 
-      streamDoneRef.current = true;
-      startDisplayLoop();
+      finishStream();
       loadChats();
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.name === 'AbortError') {
@@ -235,10 +180,7 @@ export function useChat() {
       }
 
       console.error(err);
-      stopDisplayLoop();
-      bufferRef.current = '';
-      streamDoneRef.current = true;
-      setLoading(false);
+      stopDisplay();
 
       const errorMessage =
         err.message === 'Failed to fetch'
@@ -249,6 +191,10 @@ export function useChat() {
         ...prev.slice(0, -1),
         { role: 'assistant', content: errorMessage },
       ]);
+    } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+      }
     }
   };
 
@@ -291,7 +237,6 @@ export function useChat() {
     handleSubmit,
     stopGeneration,
     handleStructuredSubmit,
-    streamDoneRef,
     loadConversation,
     startNewChat,
     loadChats,
