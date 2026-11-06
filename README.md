@@ -1,4 +1,4 @@
-# AI Chat App 🤖💬
+# AI Chat App 
 
 A full-stack, real-time AI chat application powered by the **Groq API**, built with **React + TypeScript** on the frontend and **Node.js + Express** on the backend. Conversations are persisted in a **PostgreSQL** database (hosted on Supabase), and the entire app is deployed on **Vercel**.
 
@@ -30,18 +30,18 @@ On mobile, the sidebar is hidden by default and slides in as an overlay panel tr
 
 ## ✨ Features
 
-- 🔴 **Real-time streaming** — AI responses stream token-by-token via Server-Sent Events (SSE)
-- 🛑 **Stop generation** — Abort an in-progress AI response instantly
-- 💾 **Persistent chat history** — All conversations and messages saved to PostgreSQL
-- 🗂️ **Conversation management** — Create, rename, delete, and switch between multiple chats
-- 🏷️ **Auto-titling** — Conversations are automatically named from the first user message
-- 📊 **Token usage display** — Live prompt, completion, and total token counts shown in the header
-- 📱 **Responsive design** — Mobile-first layout with slide-in sidebar and overlay backdrop
-- 📝 **Markdown rendering** — AI responses render full Markdown including tables, code blocks, and GFM
-- ⬇️ **Scroll-to-bottom button** — Floating button appears when scrolled up in a long conversation
-- 🔄 **Animated transitions** — Smooth fade-in between conversations using Framer Motion
-- 🧠 **Structured output** — Dedicated endpoint for JSON-schema-validated AI responses via Zod
-- ⚡ **Optimistic UI updates** — Chat title and conversation list update immediately before server confirmation
+-  **Real-time streaming** — AI responses stream token-by-token via Server-Sent Events (SSE)
+-  **Stop generation** — Abort an in-progress AI response instantly
+-  **Persistent chat history** — All conversations and messages saved to PostgreSQL
+-  **Conversation management** — Create, rename, delete, and switch between multiple chats
+-  **Auto-titling** — Conversations are automatically named from the first user message
+-  **Token usage display** — Live prompt, completion, and total token counts shown in the header
+-  **Responsive design** — Mobile-first layout with slide-in sidebar and overlay backdrop
+-  **Markdown rendering** — AI responses render full Markdown including tables, code blocks, and GFM
+-  **Scroll-to-bottom button** — Floating button appears when scrolled up in a long conversation
+-  **Animated transitions** — Smooth fade-in between conversations using Framer Motion
+-  **Structured output** — Dedicated endpoint for JSON-schema-validated AI responses via Zod
+-  **Optimistic UI updates** — Chat title and conversation list update immediately before server confirmation
 
 ---
 
@@ -80,7 +80,7 @@ On mobile, the sidebar is hidden by default and slides in as an overlay panel tr
 
 ---
 
-## 🧠 Code Concepts Practised
+##  Code Concepts Practised
 
 ### Frontend
 
