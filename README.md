@@ -28,6 +28,86 @@ On mobile, the sidebar is hidden by default and slides in as an overlay panel tr
 
 ---
 
+## 📦 Installed Dependencies
+
+### Frontend (`/package.json`)
+
+#### Dependencies
+| Package | Version | Purpose |
+|---|---|---|
+| `react` | ^19.2.8 | Core UI library |
+| `react-dom` | ^19.2.8 | React DOM renderer |
+| `zustand` | ^5.0.15 | Global state management |
+| `framer-motion` | ^14.0.0 | Animations and transitions |
+| `react-markdown` | ^10.1.0 | Markdown rendering in chat messages |
+| `remark-gfm` | ^4.0.1 | GitHub Flavored Markdown plugin for react-markdown |
+| `lucide-react` | ^1.51.0 | Icon library |
+| `eventsource-parser` | ^4.1.1 | SSE stream parsing on the client |
+| `groq-sdk` | ^1.6.0 | Groq API client (also used server-side) |
+| `express` | ^4.22.3 | HTTP server (also used server-side) |
+| `express-rate-limit` | ^8.7.0 | Rate limiting middleware (also used server-side) |
+| `helmet` | ^8.3.0 | HTTP security headers (also used server-side) |
+| `cors` | ^2.8.6 | Cross-origin resource sharing (also used server-side) |
+| `pg` | ^8.13.3 | PostgreSQL client (also used server-side) |
+| `zod` | ^3.25.76 | Schema validation (also used server-side) |
+| `zod-to-json-schema` | ^3.25.2 | Converts Zod schemas to JSON Schema for structured AI output |
+| `dotenv` | ^16.6.1 | Environment variable loading (also used server-side) |
+
+#### Dev Dependencies
+| Package | Version | Purpose |
+|---|---|---|
+| `vite` | ^8.3.0 | Build tool and dev server |
+| `@vitejs/plugin-react` | ^6.1.1 | React plugin for Vite |
+| `typescript` | ~6.0.2 | TypeScript compiler |
+| `tailwindcss` | ^4.3.3 | Utility-first CSS framework |
+| `@tailwindcss/vite` | ^4.3.3 | Tailwind CSS Vite plugin |
+| `eslint` | ^10.10.0 | JavaScript/TypeScript linter |
+| `typescript-eslint` | ^8.69.0 | TypeScript ESLint rules |
+| `eslint-plugin-react-hooks` | ^7.1.1 | ESLint rules for React hooks |
+| `eslint-plugin-react-refresh` | ^0.5.6 | ESLint plugin for React Fast Refresh |
+| `@eslint/js` | ^10.0.1 | ESLint's built-in JS rules |
+| `babel-plugin-react-compiler` | ^1.0.0 | React compiler Babel plugin |
+| `@rolldown/plugin-babel` | ^0.2.4 | Babel plugin for Rolldown bundler |
+| `@babel/core` | ^7.29.7 | Babel core compiler |
+| `globals` | ^17.12.0 | Global variable definitions for ESLint |
+| `@types/react` | ^19.2.18 | TypeScript types for React |
+| `@types/react-dom` | ^19.2.7 | TypeScript types for React DOM |
+| `@types/node` | ^24.13.3 | TypeScript types for Node.js |
+| `@types/express` | ^4.17.25 | TypeScript types for Express |
+| `@types/cors` | ^2.8.19 | TypeScript types for CORS |
+| `@types/pg` | ^8.11.11 | TypeScript types for node-postgres |
+| `@types/babel__core` | ^7.20.5 | TypeScript types for Babel core |
+
+---
+
+### Backend (`/server/package.json`)
+
+#### Dependencies
+| Package | Version | Purpose |
+|---|---|---|
+| `express` | ^4.22.3 | HTTP server and API routing |
+| `groq-sdk` | ^1.6.0 | Groq API client for LLM inference and streaming |
+| `pg` | ^8.23.1 | PostgreSQL client and connection pool |
+| `zod` | ^3.25.76 | Runtime request body validation |
+| `zod-to-json-schema` | ^3.25.2 | Converts Zod schemas to JSON Schema for structured AI output |
+| `helmet` | ^8.3.0 | Secure HTTP response headers |
+| `cors` | ^2.8.6 | Allowlist-based CORS origin control |
+| `express-rate-limit` | ^8.7.0 | Per-minute and daily request rate limiting |
+| `dotenv` | ^16.6.1 | Environment variable loading from `.env` |
+
+#### Dev Dependencies
+| Package | Version | Purpose |
+|---|---|---|
+| `typescript` | ^5.9.3 | TypeScript compiler |
+| `tsx` | ^4.23.15 | TypeScript execution for Node.js (run `.ts` files directly) |
+| `nodemon` | ^3.1.14 | Auto-restart server on file changes during development |
+| `@types/node` | ^20.19.43 | TypeScript types for Node.js built-ins |
+| `@types/express` | ^4.17.25 | TypeScript types for Express |
+| `@types/cors` | ^2.8.19 | TypeScript types for CORS |
+| `@types/pg` | ^8.23.1 | TypeScript types for node-postgres |
+
+---
+
 ## ✨ Features
 
 -  **Real-time streaming** — AI responses stream token-by-token via Server-Sent Events (SSE)
