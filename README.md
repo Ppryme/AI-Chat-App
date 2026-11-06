@@ -2,7 +2,7 @@
 
 A full-stack, real-time AI chat application powered by the **Groq API**, built with **React + TypeScript** on the frontend and **Node.js + Express** on the backend. Conversations are persisted in a **PostgreSQL** database (hosted on Supabase), and the entire app is deployed on **Vercel**.
 
-Users can send messages, receive streamed AI responses token-by-token, manage multiple named conversations, rename or delete chats, and pick up right where they left off — all in a sleek, dark-themed UI.
+Users can send messages, receive streamed AI responses token-by-token, manage multiple named conversations, rename or delete chats, and pick up right where they left off.
 
 ---
 
