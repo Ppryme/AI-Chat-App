@@ -16,7 +16,7 @@ The desktop layout features a persistent sidebar on the left that lists all save
 
 ## 📱 Mobile Preview
 
-![Mobile Preview](./src/Images/Screenshot_20261106-102140~2.jpg)
+![Mobile Preview](./src/Images/Screenshot%202026-11-06%20112707.png)
 
 On mobile, the sidebar is hidden by default and slides in as an overlay panel triggered from the header menu button. A dark backdrop dims the chat area while the sidebar is open, and tapping outside it closes it. The chat layout adapts cleanly to small screens with compact padding, ensuring the input and messages remain usable on all screen sizes.
 
