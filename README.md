@@ -22,9 +22,9 @@ On mobile, the sidebar is hidden by default and slides in as an overlay panel tr
 
 ---
 
-## 🚀 Live Demo
+##  Live Demo
 
-👉 https://ai-chat-app-green-three.vercel.app/
+ https://ai-chat-app-green-three.vercel.app/
 
 ---
 
